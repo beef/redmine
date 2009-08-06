@@ -22,6 +22,7 @@ Rails::Initializer.run do |config|
   
   # Skip frameworks you're not going to use
   # config.frameworks -= [ :action_web_service, :action_mailer ]
+  config.gem 'mattetti-googlecharts', :lib => 'gchart', :version => ">=1.3.6"
 
   # Add additional load paths for sweepers
   config.load_paths += %W( #{RAILS_ROOT}/app/sweepers )

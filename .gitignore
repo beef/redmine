@@ -1,0 +1,10 @@
+log/*
+tmp/*
+db/schema.rb
+db/*.sqlite3
+public/plugin_assets
+*~
+config/dblogin.yml
+config/deploy.rb
+*#
+.#*

@@ -17,3 +17,5 @@
 /tmp/sockets/*
 /tmp/test/*
 /vendor/rails
+Capfile
+config/deploy.rb

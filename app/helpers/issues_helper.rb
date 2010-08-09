@@ -141,56 +141,16 @@ module IssuesHelper
     end
   end
   
-  def issues_to_csv(issues, project = nil)
+  def issues_to_csv(query, sort_clause, project = nil)
     ic = Iconv.new(l(:general_csv_encoding), 'UTF-8')    
     decimal_separator = l(:general_csv_decimal_separator)
     export = FCSV.generate(:col_sep => l(:general_csv_separator)) do |csv|
       # csv header fields
-      headers = [ "#",
-                  l(:field_status), 
-                  l(:field_project),
-                  l(:field_tracker),
-                  l(:field_priority),
-                  l(:field_subject),
-                  l(:field_assigned_to),
-                  l(:field_category),
-                  l(:field_fixed_version),
-                  l(:field_author),
-                  l(:field_start_date),
-                  l(:field_due_date),
-                  l(:field_done_ratio),
-                  l(:field_estimated_hours),
-                  l(:field_created_on),
-                  l(:field_updated_on)
-                  ]
-      # Export project custom fields if project is given
-      # otherwise export custom fields marked as "For all projects"
-      custom_fields = project.nil? ? IssueCustomField.for_all : project.all_issue_custom_fields
-      custom_fields.each {|f| headers << f.name}
-      # Description in the last column
-      headers << l(:field_description)
+      headers = [ "#"] + query.columns.map(&:name)
       csv << headers.collect {|c| begin; ic.iconv(c.to_s); rescue; c.to_s; end }
       # csv lines
-      issues.each do |issue|
-        fields = [issue.id,
-                  issue.status.name, 
-                  issue.project.name,
-                  issue.tracker.name, 
-                  issue.priority.name,
-                  issue.subject,
-                  issue.assigned_to,
-                  issue.category,
-                  issue.fixed_version,
-                  issue.author.name,
-                  format_date(issue.start_date),
-                  format_date(issue.due_date),
-                  issue.done_ratio,
-                  issue.estimated_hours.to_s.gsub('.', decimal_separator),
-                  format_time(issue.created_on),  
-                  format_time(issue.updated_on)
-                  ]
-        custom_fields.each {|f| fields << show_value(issue.custom_value_for(f)) }
-        fields << issue.description
+      @query.issues(:order => sort_clause, :include => [:assigned_to, :tracker, :priority, :category, :fixed_version]).each do |issue|
+        fields = [issue.id] + query.columns.map{|q| q.value(issue) }
         csv << fields.collect {|c| begin; ic.iconv(c.to_s); rescue; c.to_s; end }
       end
     end

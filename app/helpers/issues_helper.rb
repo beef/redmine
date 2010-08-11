@@ -146,11 +146,14 @@ module IssuesHelper
     decimal_separator = l(:general_csv_decimal_separator)
     export = FCSV.generate(:col_sep => l(:general_csv_separator)) do |csv|
       # csv header fields
-      headers = [ "#"] + query.columns.map(&:name)
+      headers = ["#"] + query.columns.map(&:name)
+      # Description in the last column
+      headers << l(:field_description)
       csv << headers.collect {|c| begin; ic.iconv(c.to_s); rescue; c.to_s; end }
       # csv lines
       @query.issues(:order => sort_clause, :include => [:assigned_to, :tracker, :priority, :category, :fixed_version]).each do |issue|
         fields = [issue.id] + query.columns.map{|q| q.value(issue) }
+        fields << issue.description
         csv << fields.collect {|c| begin; ic.iconv(c.to_s); rescue; c.to_s; end }
       end
     end

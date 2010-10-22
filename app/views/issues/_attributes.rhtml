@@ -2,29 +2,39 @@
 
 <div class="splitcontentleft">
 <% if @issue.new_record? || @allowed_statuses.any? %>
-<p><%= f.select :status_id, (@allowed_statuses.collect {|p| [p.name, p.id]}), :required => true %></p>
+  <p><%= f.select :status_id, (@allowed_statuses.collect {|p| [p.name, p.id]}), :required => true %></p>
 <% else %>
 <p><label><%= l(:field_status) %></label> <%= @issue.status.name %></p>
 <% end %>
 
-<p><%= f.select :priority_id, (@priorities.collect {|p| [p.name, p.id]}), :required => true %></p>
+<p><%= f.select :priority_id, (@priorities.collect {|p| [p.name, p.id]}), :required => true %><span title="Status Decriptions" onclick="$('status-list').toggle()">(?)</span></p>
+  <dl id="status-list" style="display:none;background:#fff;border:1px solid #000;position:absolute;padding:5px;width:600px;" onclick="$('status-list').hide()">
+    <dt>Urgent.<dt>
+    <dd>Any Supported website problem resulting in serious loss or degradation of service or serious loss of functionality that prevents a company from being able to perform business critical activities;<dd>
+    <dt>High.<dt>
+    <dd>Any Supported website problem that reduces system security or data integrity, or which represents a serious threat to service;<dd>
+    <dt>Normal.<dt>
+    <dd>Low level Supported website or procedural problems requiring resolution in defined time scales;<dd>
+    <dt>Low.<dt>
+    <dd>Other low level Supported website, procedural problem or change request relating to the design or functionality of the website.<dd>
+  </dl>
 <p><%= f.select :assigned_to_id, (@issue.assignable_users.collect {|m| [m.name, m.id]}), :include_blank => true %></p>
 <% unless @project.issue_categories.empty? %>
 <p><%= f.select :category_id, (@project.issue_categories.collect {|c| [c.name, c.id]}), :include_blank => true %>
 <%= prompt_to_remote(image_tag('add.png', :style => 'vertical-align: middle;'),
                      l(:label_issue_category_new),
-                     'category[name]', 
+                     'category[name]',
                      {:controller => 'projects', :action => 'add_issue_category', :id => @project},
-                     :title => l(:label_issue_category_new), 
+                     :title => l(:label_issue_category_new),
                      :tabindex => 199) if authorize_for('projects', 'add_issue_category') %></p>
 <% end %>
 <% unless @issue.assignable_versions.empty? %>
 <p><%= f.select :fixed_version_id, version_options_for_select(@issue.assignable_versions, @issue.fixed_version), :include_blank => true %>
 <%= prompt_to_remote(image_tag('add.png', :style => 'vertical-align: middle;'),
                      l(:label_version_new),
-                     'version[name]', 
+                     'version[name]',
                      {:controller => 'projects', :action => 'add_version', :id => @project},
-                     :title => l(:label_version_new), 
+                     :title => l(:label_version_new),
                      :tabindex => 200) if authorize_for('projects', 'add_version') %>
 </p>
 <% end %>

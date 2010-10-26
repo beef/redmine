@@ -9,11 +9,11 @@
 
 <p><%= f.select :priority_id, (@priorities.collect {|p| [p.name, p.id]}), :required => true %><span title="Status Decriptions" onclick="$('status-list').toggle()">(?)</span></p>
   <dl id="status-list" style="display:none;background:#fff;border:1px solid #000;position:absolute;padding:5px;width:600px;" onclick="$('status-list').hide()">
-    <dt>Urgent.<dt>
+    <dt>Emergency.<dt>
     <dd>Any Supported website problem resulting in serious loss or degradation of service or serious loss of functionality that prevents a company from being able to perform business critical activities;<dd>
-    <dt>High.<dt>
+    <dt>Urgent.<dt>
     <dd>Any Supported website problem that reduces system security or data integrity, or which represents a serious threat to service;<dd>
-    <dt>Normal.<dt>
+    <dt>No Urgent (High and Normal).<dt>
     <dd>Low level Supported website or procedural problems requiring resolution in defined time scales;<dd>
     <dt>Low.<dt>
     <dd>Other low level Supported website, procedural problem or change request relating to the design or functionality of the website.<dd>

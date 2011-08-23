@@ -1,0 +1,5 @@
+# English strings go here
+en:
+  label_includes: Includes
+  label_belongs_to: Belongs to
+  button_decompose: Decompose

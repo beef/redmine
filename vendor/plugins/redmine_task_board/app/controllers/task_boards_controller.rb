@@ -39,8 +39,8 @@ class TaskBoardsController < ApplicationController
 private
   def find_version_and_project
     @project = Project.find(params[:id])
-    @version = @project.versions.find_by_id(params[:version_id]) || @project.current_version
-    @versions = @project.versions.all(:order => 'effective_date')
+    @version = @project.versions.find_by_id(params[:version_id]) || @project.current_version || @project.versions.open.last
+    @versions = @project.versions.open.all(:order => 'effective_date')
     render_error(l(:task_board_text_no_sprint)) and return unless @version
   end
 end

@@ -3,7 +3,7 @@ module ScrumAlliance
     module ProjectExtensions
       # Note that this method is also used in the other plugins and should probably be moved (somehow).
       def current_version
-        versions.last( :conditions => [ 'effective_date > ?', Date.current ] )
+        versions.open.last( :conditions => [ 'effective_date > ?', Date.current ] )
       end
     end # ProjectExtensions
   end # Redmine
